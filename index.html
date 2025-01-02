@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, white, red);
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Caesar Cipher</h3>
+        <ul class="nav nav-tabs" id="cipherTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active text-light" id="encrypt-tab" data-bs-toggle="tab" data-bs-target="#encrypt" type="button" role="tab" aria-controls="encrypt" aria-selected="true"><span style="color:black">Encrypt</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link text-light" id="decrypt-tab" data-bs-toggle="tab" data-bs-target="#decrypt" type="button" role="tab" aria-controls="decrypt" aria-selected="false"><span style="color:black">Decrypt</span></button>
+            </li>
+        </ul>
+        <div class="tab-content mt-3" id="cipherTabsContent">
+            <!-- Encryption Tab -->
+            <div class="tab-pane fade show active" id="encrypt" role="tabpanel" aria-labelledby="encrypt-tab">
+                <div class="mb-3">
+                    <label for="plainText" class="form-label">Plain Text:</label>
+                    <input type="text" id="plainText" class="form-control" placeholder="Enter text to encrypt">
+                </div>
+                <div class="mb-3">
+                    <label for="encryptShift" class="form-label">Shift:</label>
+                    <input type="number" id="encryptShift" class="form-control" placeholder="Enter shift value">
+                </div>
+                <div class="mb-3">
+                    <label for="cipherText" class="form-label">Cipher Text:</label>
+                    <div id="cipherText" class="result-box bg-danger text-light">-</div>
+                </div>
+                <button class="btn btn-danger" onclick="encryptText()">Encrypt</button>
+            </div>
+
+            <!-- Decryption Tab -->
+            <div class="tab-pane fade" id="decrypt" role="tabpanel" aria-labelledby="decrypt-tab">
+                <div class="mb-3">
+                    <label for="cipherInput" class="form-label">Cipher Text:</label>
+                    <input type="text" id="cipherInput" class="form-control" placeholder="Enter text to decrypt">
+                </div>
+                <div class="mb-3">
+                    <label for="decryptShift" class="form-label">Shift:</label>
+                    <input type="number" id="decryptShift" class="form-control" placeholder="Enter shift value">
+                </div>
+                <div class="mb-3">
+                    <label for="plainOutput" class="form-label">Plain Text:</label>
+                    <div id="plainOutput" class="result-box bg-primary text-light">-</div>
+                </div>
+                <button class="btn btn-primary" onclick="decryptText()">Decrypt</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function caesarCipher(text, shift, action) {
+            return text
+                .split("")
+                .map((char) => {
+                    let code = char.charCodeAt(0);
+                    if (code >= 65 && code <= 90) {
+                        code = (code - 65 + (action === "encrypt" ? shift : -shift) + 26) % 26 + 65;
+                    } else if (code >= 97 && code <= 122) {
+                        code = (code - 97 + (action === "encrypt" ? shift : -shift) + 26) % 26 + 97;
+                    }
+                    return String.fromCharCode(code);
+                })
+                .join("");
+        }
+
+        function encryptText() {
+            const plainText = document.getElementById("plainText").value;
+            const shift = parseInt(document.getElementById("encryptShift").value) || 0;
+            const result = caesarCipher(plainText, shift, "encrypt");
+            document.getElementById("cipherText").textContent = result || "-";
+        }
+
+        function decryptText() {
+            const cipherText = document.getElementById("cipherInput").value;
+            const shift = parseInt(document.getElementById("decryptShift").value) || 0;
+            const result = caesarCipher(cipherText, shift, "decrypt");
+            document.getElementById("plainOutput").textContent = result || "-";
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
